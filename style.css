@@ -1,0 +1,500 @@
+:root{
+  --sage: #8FAF8A;
+  --sage-dark: #708F6C;
+  --cream: #F3EFE4;
+  --chrome: #E9E4D6;
+  --chrome-dark: #C7C0AC;
+  --interior-dark: #2E2A22;
+  --interior-wall: #EFE9DA;
+  --light-warm: #FFE7AE;
+  --ink: #2B2420;
+  --ink-soft: #6B6255;
+  --clay: #C1583F;
+  --fresh: #5C8A5A;
+  --aging: #D4A23A;
+  --rotten: #B24B3C;
+  --radius-lg: 22px;
+  --radius-sm: 10px;
+}
+
+*{ box-sizing: border-box; }
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+}
+
+.wrap{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 24px 90px;
+}
+
+.site-head{
+  margin-bottom: 40px;
+}
+.site-head h1{
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.tagline{
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink-soft);
+  font-size: 1.15rem;
+  margin: 6px 0 0;
+}
+
+.app{
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.9fr);
+  gap: 44px;
+  align-items: start;
+}
+
+/* ===================== FRIDGE STAGE ===================== */
+.fridge-stage{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: sticky;
+  top: 32px;
+}
+
+.fridge{
+  perspective: 1800px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.fridge-shadow{
+  width: 84%;
+  height: 22px;
+  margin: 0 auto -14px;
+  background: radial-gradient(ellipse at center, rgba(43,36,32,0.28), transparent 72%);
+  border-radius: 50%;
+}
+
+.fridge-body{
+  position: relative;
+  background: linear-gradient(180deg, var(--sage) 0%, var(--sage-dark) 100%);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  box-shadow:
+    0 30px 60px -25px rgba(43,36,32,0.45),
+    inset 0 0 0 2px rgba(255,255,255,0.18);
+}
+
+/* -------- Freezer -------- */
+.freezer{
+  position: relative;
+  height: 78px;
+  background: linear-gradient(180deg, var(--chrome) 0%, var(--chrome-dark) 100%);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: inset 0 0 0 1px rgba(43,36,32,0.08);
+}
+.freezer-label{
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.freezer-handle{
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 42px;
+  border-radius: 4px;
+  background: linear-gradient(180deg,#fff,#B9B2A0);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* -------- Interior (behind door) -------- */
+.interior{
+  position: relative;
+  background: var(--interior-wall);
+  border-radius: 14px;
+  min-height: 460px;
+  padding: 16px 14px 10px;
+  overflow: hidden;
+  box-shadow: inset 0 10px 30px rgba(43,36,32,0.18), inset 0 0 0 1px rgba(43,36,32,0.06);
+}
+
+.bulb{
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #CFC6B0;
+  box-shadow: none;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+  z-index: 2;
+}
+.fridge.open .bulb{
+  background: var(--light-warm);
+  box-shadow: 0 0 22px 8px rgba(255,231,174,0.85);
+}
+.fridge.open .interior{
+  background: #FBF5E6;
+}
+.fridge.open .interior::before{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(circle at 85% 5%, rgba(255,231,174,0.55), transparent 60%);
+  pointer-events:none;
+}
+
+.shelf-space{
+  position: relative;
+  padding-bottom: 14px;
+  margin-bottom: 6px;
+}
+.shelf-space:last-child .glass-shelf{ display:none; }
+
+.shelf-label{
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.15s;
+}
+.fridge.open .shelf-label{ opacity: 1; }
+
+.items-row{
+  min-height: 62px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-bottom: 6px;
+  transition: background 0.15s ease;
+  border-radius: 8px;
+}
+.items-row.drag-over{
+  background: rgba(92,138,90,0.16);
+  outline: 2px dashed var(--fresh);
+  outline-offset: 2px;
+}
+
+.glass-shelf{
+  height: 8px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(190,205,215,0.55));
+  box-shadow: 0 3px 6px rgba(43,36,32,0.15);
+}
+
+/* -------- Door -------- */
+.door{
+  position: absolute;
+  top: 92px;
+  left: 14px;
+  right: 14px;
+  bottom: 10px;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(.42,0,.22,1);
+  z-index: 3;
+}
+.fridge.open .door{
+  transform: rotateY(-108deg);
+}
+
+.door-face{
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg, #97B992 0%, var(--sage-dark) 100%);
+  border-radius: 12px;
+  backface-visibility: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15), 0 6px 18px rgba(43,36,32,0.15);
+  padding: 16px;
+  cursor: pointer;
+}
+.brand-badge{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.04em;
+}
+.brand-badge span{ font-weight:400; opacity:0.8; }
+.handle{
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 130px;
+  border-radius: 5px;
+  background: linear-gradient(180deg,#fff,#B9B2A0);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+
+.door-inner{
+  position: absolute;
+  inset: 0;
+  background: var(--interior-wall);
+  border-radius: 12px;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+  padding: 18px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: inset 0 0 12px rgba(43,36,32,0.15);
+}
+.bin{
+  min-height: 44px;
+  background: rgba(143,175,138,0.28);
+  border-radius: 8px 8px 3px 3px;
+  border-bottom: 3px solid rgba(112,143,108,0.55);
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 4px 6px;
+  flex-wrap: wrap;
+}
+.bin.drag-over{
+  outline: 2px dashed var(--fresh);
+  outline-offset: 1px;
+}
+
+.door-toggle{
+  margin-top: 18px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--cream);
+  background: var(--ink);
+  border: none;
+  border-radius: 999px;
+  padding: 11px 26px;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.door-toggle:hover{ background: #453C31; }
+.door-toggle:active{ transform: scale(0.97); }
+
+/* ===================== FOOD ITEMS ===================== */
+.item{
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: grab;
+  box-shadow: 0 3px 8px rgba(43,36,32,0.18), inset 0 0 0 2px transparent;
+  transition: box-shadow 0.2s ease, opacity 0.4s ease, filter 0.4s ease;
+}
+.item:active{ cursor: grabbing; }
+.item.fresh{ box-shadow: 0 3px 8px rgba(43,36,32,0.18), inset 0 0 0 2px var(--fresh); }
+.item.aging{ box-shadow: 0 3px 8px rgba(43,36,32,0.18), inset 0 0 0 2px var(--aging); }
+.item.rotten{
+  box-shadow: 0 3px 8px rgba(43,36,32,0.18), inset 0 0 0 2px var(--rotten);
+  filter: grayscale(0.55) brightness(0.9);
+}
+.item.rotten::after{
+  content: "";
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--rotten);
+  box-shadow: 0 0 0 2px #fff;
+}
+.item-age{
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.item.dragging{ opacity: 0.35; }
+
+/* ===================== PANEL ===================== */
+.panel{
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.panel-block{
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 20px 22px;
+  box-shadow: 0 1px 0 rgba(43,36,32,0.06);
+  border: 1px solid rgba(43,36,32,0.08);
+}
+.panel-block h2{
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin: 0 0 10px;
+}
+.panel-row{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.panel-row h2{ margin: 0; }
+.hint{
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+
+.btn{
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.btn:active{ transform: scale(0.96); }
+.btn.primary{
+  background: var(--clay);
+  color: #fff;
+}
+.btn.primary:hover{ background: #A8442E; }
+
+.thermo{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.thermo-cold, .thermo-warm{
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+#tempSlider{
+  flex: 1;
+  accent-color: var(--clay);
+}
+
+.grocery-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.grocery-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: var(--interior-wall);
+  border: 1px solid rgba(43,36,32,0.08);
+  border-radius: 10px;
+  padding: 10px 4px 8px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+.grocery-item:hover{ background: #E6E0CE; }
+.grocery-item:active{ transform: scale(0.95); }
+.grocery-emoji{ font-size: 1.4rem; }
+.grocery-name{ font-size: 0.62rem; color: var(--ink-soft); text-align: center; line-height: 1.2; }
+
+.legend{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+.legend li{ display: flex; align-items: center; gap: 8px; }
+.dot{ width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot.fresh{ background: var(--fresh); }
+.dot.aging{ background: var(--aging); }
+.dot.rotten{ background: var(--rotten); }
+
+/* ===================== TRASH ===================== */
+.trash{
+  position: fixed;
+  bottom: 26px;
+  right: 26px;
+  width: 92px;
+  height: 92px;
+  background: #fff;
+  border: 2px dashed var(--chrome-dark);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  box-shadow: 0 8px 24px rgba(43,36,32,0.18);
+  transition: border-color 0.2s ease, background 0.2s ease;
+  z-index: 20;
+}
+.trash-icon{ font-size: 1.6rem; }
+.trash-label{ font-size: 0.6rem; color: var(--ink-soft); font-weight: 600; }
+.trash.drag-over{
+  border-color: var(--rotten);
+  background: rgba(178,75,60,0.08);
+}
+
+/* ===================== TOAST ===================== */
+.toast{
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: var(--cream);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 30;
+}
+.toast.show{
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 880px){
+  .app{ grid-template-columns: 1fr; }
+  .fridge-stage{ position: static; }
+  .grocery-grid{ grid-template-columns: repeat(5, 1fr); }
+}
+@media (max-width: 480px){
+  .grocery-grid{ grid-template-columns: repeat(4, 1fr); }
+  .trash{ width: 72px; height: 72px; right: 14px; bottom: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .door{ transition: none; }
+  .item{ transition: none; }
+}

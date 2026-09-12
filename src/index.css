@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+@import "../style.css";
+
+button,
+input {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+.item:focus-visible {
+  outline: 3px solid var(--clay);
+  outline-offset: 3px;
+}
